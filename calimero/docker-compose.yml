@@ -1,0 +1,28 @@
+version: "3"
+
+
+services: 
+  database:
+    build: ./mysql
+    restart: on-failure
+    volumes: 
+      - "database_volume:/var/lib/mysql"
+
+  backend:
+    build: ./back
+    environment: 
+      DB_HOST: "database"
+    restart: on-failure
+    depends_on: 
+      - database
+
+  frontend:
+    build: ./front
+    ports: 
+      - "8080:80"
+    restart: on-failure
+    depends_on: 
+      - backend
+
+volumes: 
+  database_volume: {}
